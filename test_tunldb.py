@@ -3,6 +3,7 @@ import tunldb
 import time
 import itertools
 import threading
+import os
 
 PERSIST_PATH = 'test.db'
 
@@ -225,6 +226,16 @@ class TestTunlDB(unittest.TestCase):
         self.assertEqual(self.db.get('key2'), 'val2')
         self.db.remove('key1')
         self.db.remove('key2')
+
+    def test_persist(self):
+        persist_db = tunldb.TunlDB()
+        persist_db.persist(PERSIST_PATH, False)
+        persist_db.set('key', 'val')
+        persist_db.export_data()
+        persist_db = tunldb.TunlDB()
+        persist_db.persist(PERSIST_PATH, False)
+        self.assertEqual(persist_db.get('key'), 'val')
+        os.remove(PERSIST_PATH)
 
 if __name__ == '__main__':
     unittest.main()
