@@ -214,5 +214,17 @@ class TestTunlDB(unittest.TestCase):
         self.db.publish('key', 'val')
         self.assertTrue(recv.wait(1))
 
+    def test_transaction(self):
+        tran = self.db.transaction()
+        tran.set('key1', 'val1')
+        tran.set('key2', 'val2')
+        self.assertIsNone(self.db.get('key1'))
+        self.assertIsNone(self.db.get('key2'))
+        tran.commit()
+        self.assertEqual(self.db.get('key1'), 'val1')
+        self.assertEqual(self.db.get('key2'), 'val2')
+        self.db.remove('key1')
+        self.db.remove('key2')
+
 if __name__ == '__main__':
     unittest.main()
