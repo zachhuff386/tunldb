@@ -2,6 +2,7 @@ import unittest
 import tunldb
 import time
 import itertools
+import threading
 
 PERSIST_PATH = 'test.db'
 
@@ -193,12 +194,25 @@ class TestTunlDB(unittest.TestCase):
         self.assertEqual(self.db.dict_values('key'), {'val1', 'val2'})
         self.db.remove('key')
 
-    def dict_get_all(self):
+    def test_dict_get_all(self):
         self.db.dict_set('key', 'field1', 'val1')
         self.db.dict_set('key', 'field2', 'val2')
         self.assertEqual(self.db.dict_get_all('key'),
             {'field1': 'val1', 'field2': 'val2'})
         self.db.remove('key')
+
+    def test_publish_subscribe(self):
+        recv = threading.Event()
+        def listen():
+            for msg in self.db.subscribe('key'):
+                if msg == 'val':
+                    recv.set()
+                break
+        listen_thread = threading.Thread(target=listen)
+        listen_thread.daemon = True
+        listen_thread.start()
+        self.db.publish('key', 'val')
+        self.assertTrue(recv.wait(1))
 
 if __name__ == '__main__':
     unittest.main()
