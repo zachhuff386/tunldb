@@ -123,10 +123,13 @@ class TunlDB:
             try:
                 data['val'] = str(int(data['val']) - 1)
             except (TypeError, ValueError):
-                data['val'] = '0'
+                data['val'] = '-1'
         else:
-            self._data[key]['val'] = '0'
+            self._data[key]['val'] = '-1'
         self._put_queue()
+
+    def keys(self):
+        return set(self._data)
 
     def set_add(self, key, element):
         self._validate(element)
@@ -260,7 +263,7 @@ class TunlDB:
             except TypeError:
                 pass
 
-    def list_remove(self, key, value, count=0):
+    def list_remove(self, key, value, count=1):
         self._validate(value)
         data = self._data.get(key)
         if data:
@@ -286,14 +289,6 @@ class TunlDB:
                 pass
         return 0
 
-    def dict_get(self, key, field):
-        data = self._data.get(key)
-        if data:
-            try:
-                return data['val'].get(field)
-            except TypeError:
-                pass
-
     def dict_set(self, key, field, value):
         self._validate(value)
         data = self._data.get(key)
@@ -305,6 +300,14 @@ class TunlDB:
         else:
             self._data[key]['val'] = {field: value}
         self._put_queue()
+
+    def dict_get(self, key, field):
+        data = self._data.get(key)
+        if data:
+            try:
+                return data['val'].get(field)
+            except TypeError:
+                pass
 
     def dict_remove(self, key, field):
         data = self._data.get(key)
