@@ -60,14 +60,15 @@ class TunlDB:
         if value is not None and not isinstance(value, basestring):
             raise TypeError('Value must be string')
 
-    def persist(self, path):
+    def persist(self, path, auto_export=True):
         if self._path:
             raise ValueError('Persist is already set')
         self._path = path
         self.import_data()
-        thread = threading.Thread(target=self._export_thread)
-        thread.daemon = True
-        thread.start()
+        if auto_export:
+            thread = threading.Thread(target=self._export_thread)
+            thread.daemon = True
+            thread.start()
 
     def set(self, key, value):
         self._validate(value)
@@ -392,7 +393,7 @@ class TunlDB:
     def export_data(self):
         if not self._path:
             return
-        temp_path = self._path + '.tmp'
+        temp_path = self._path + '_%s.tmp' % uuid.uuid4().hex
         try:
             data = self._data.copy()
             timers = self._timers.keys()
