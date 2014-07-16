@@ -151,7 +151,7 @@ class TestTunlDB(unittest.TestCase):
         self.db.list_rpush('key', 'val2')
         self.db.list_rpush('key', 'val3')
         self.assertTrue(all([x == y for x, y in itertools.izip(
-            ['val2', 'val3'], self.db.list_iter_range('key', 1, 2))]))
+            ['val2', 'val3'], self.db.list_iter_range('key', 1, 3))]))
         self.db.remove('key')
 
     def test_list_remove(self):
