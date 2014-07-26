@@ -18,6 +18,7 @@ TRANSACTION_METHODS = {
     'expire',
     'set_add',
     'set_remove',
+    'set_pop',
     'list_lpush',
     'list_rpush',
     'list_lpop',
@@ -153,15 +154,6 @@ class TunlDB:
             except (KeyError, AttributeError):
                 pass
 
-    def set_exists(self, key, element):
-        data = self._data.get(key)
-        if data:
-            try:
-                return element in data['val']
-            except (TypeError, AttributeError):
-                pass
-        return False
-
     def set_pop(self, key):
         value = None
         data = self._data.get(key)
@@ -172,6 +164,15 @@ class TunlDB:
             except (KeyError, AttributeError):
                 pass
         return value
+
+    def set_exists(self, key, element):
+        data = self._data.get(key)
+        if data:
+            try:
+                return element in data['val']
+            except (TypeError, AttributeError):
+                pass
+        return False
 
     def set_elements(self, key):
         data = self._data.get(key)
