@@ -111,6 +111,16 @@ Commands
 
         >> db.set_remove('key', 'val')
 
+**set_pop**
+    **Time complexity: O(1)**
+
+    Get and remove an arbitrary element from a set
+
+    .. code-block:: python
+
+        >> db.set_pop('key')
+        'val'
+
 **set_exists**
     **Time complexity: O(1)**
 
