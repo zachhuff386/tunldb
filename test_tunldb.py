@@ -80,6 +80,13 @@ class TestTunlDB(unittest.TestCase):
         self.assertEqual(self.db.set_elements('key'), set())
         self.db.remove('key')
 
+    def test_set_pop(self):
+        self.db.set_add('key', 'val')
+        self.assertEqual(self.db.set_elements('key'), {'val'})
+        self.assertEqual(self.db.set_pop('key'), 'val')
+        self.assertEqual(self.db.set_elements('key'), set())
+        self.db.remove('key')
+
     def test_set_exists(self):
         self.db.set_add('key', 'val')
         self.assertTrue(self.db.set_exists('key', 'val'))
