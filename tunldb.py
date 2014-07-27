@@ -183,6 +183,15 @@ class TunlDB:
                 pass
         return set()
 
+    def set_iter(self, key):
+        data = self._data.get(key)
+        if data:
+            try:
+                for value in data['val'].copy():
+                    yield value
+            except AttributeError:
+                pass
+
     def set_length(self, key):
         data = self._data.get(key)
         if data:
@@ -346,6 +355,16 @@ class TunlDB:
             except AttributeError:
                 pass
         return set()
+
+    def dict_iter(self, key):
+        data = self._data.get(key)
+        if data:
+            data_copy = data['val'].copy()
+            try:
+                for field in data_copy:
+                    yield field, data_copy[field]
+            except (TypeError, AttributeError):
+                pass
 
     def dict_get_all(self, key):
         data = self._data.get(key)
