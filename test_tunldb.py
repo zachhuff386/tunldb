@@ -100,6 +100,14 @@ class TestTunlDB(unittest.TestCase):
         self.assertEqual(self.db.set_elements('key'), {'val1', 'val2'})
         self.db.remove('key')
 
+    def test_set_iter(self):
+        self.db.set_add('key', 'val1')
+        self.db.set_add('key', 'val2')
+        set_iter = [x for x in self.db.set_iter('key')]
+        self.assertIn('val1', set_iter)
+        self.assertIn('val2', set_iter)
+        self.db.remove('key')
+
     def test_set_length(self):
         self.db.set_add('key', 'val')
         self.assertEqual(self.db.set_length('key'), 1)
@@ -200,6 +208,14 @@ class TestTunlDB(unittest.TestCase):
         self.db.dict_set('key', 'field1', 'val1')
         self.db.dict_set('key', 'field2', 'val2')
         self.assertEqual(self.db.dict_values('key'), {'val1', 'val2'})
+        self.db.remove('key')
+
+    def test_dict_iter(self):
+        self.db.dict_set('key', 'field1', 'val1')
+        self.db.dict_set('key', 'field2', 'val2')
+        set_iter = [x for x in self.db.dict_iter('key')]
+        self.assertIn(('field1', 'val1'), set_iter)
+        self.assertIn(('field2', 'val2'), set_iter)
         self.db.remove('key')
 
     def test_dict_get_all(self):
