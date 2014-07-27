@@ -141,6 +141,16 @@ Commands
         >> db.set_elements('key')
         {'val1', 'val2'}
 
+**set_iter**
+    **Time complexity: O(n)**
+
+    Iterate all the elements in a set
+
+    .. code-block:: python
+
+        >> [x for x in test.set_iter('key')]
+        ['val1', 'val2']
+
 **set_length**
     **Time complexity: O(1)**
 
@@ -296,6 +306,16 @@ Commands
 
         >> db.dict_values('key')
         {'val1', 'val2'}
+
+**dict_iter**
+    **Time complexity: O(n)**
+
+    Iterate all the fields and values in a dictionary
+
+    .. code-block:: python
+
+        >> [x, y for x, y in test.dict_iter('key')]
+        [('field1', 'val1'), ('field2', 'val2')]
 
 **dict_get_all**
     **Time complexity: O(n)**
