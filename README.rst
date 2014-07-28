@@ -72,6 +72,7 @@ Commands
     .. code-block:: python
 
         >> db.increment('key')
+        '1'
 
 **decrement**
     **Time complexity: O(1)**
@@ -81,6 +82,7 @@ Commands
     .. code-block:: python
 
         >> db.decrement('key')
+        '-1'
 
 **keys**
     **Time complexity: O(n)**

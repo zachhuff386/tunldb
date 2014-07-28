@@ -48,16 +48,16 @@ class TestTunlDB(unittest.TestCase):
         self.assertIsNone(self.db.get('key'))
 
     def test_increment(self):
-        self.db.increment('key')
+        self.assertEqual(self.db.increment('key'), '1')
         self.assertEqual(self.db.get('key'), '1')
-        self.db.increment('key')
+        self.assertEqual(self.db.increment('key'), '2')
         self.assertEqual(self.db.get('key'), '2')
         self.db.remove('key')
 
     def test_decrement(self):
-        self.db.decrement('key')
+        self.assertEqual(self.db.decrement('key'), '-1')
         self.assertEqual(self.db.get('key'), '-1')
-        self.db.decrement('key')
+        self.assertEqual(self.db.decrement('key'), '-2')
         self.assertEqual(self.db.get('key'), '-2')
         self.db.remove('key')
 
