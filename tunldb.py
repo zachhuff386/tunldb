@@ -105,6 +105,7 @@ class TunlDB:
         if cur_timer:
             cur_timer.cancel()
         timer = threading.Timer(ttl, self.remove, (key,))
+        timer.daemon = True
         self._timers[key] = timer
         timer.start()
 
@@ -432,6 +433,7 @@ class TunlDB:
         if cur_timer:
             cur_timer.cancel()
         timer = threading.Timer(CHANNEL_TTL, self._clear_channel, (channel,))
+        timer.daemon = True
         self._channels[channel]['timer'] = timer
         timer.start()
 
@@ -519,6 +521,7 @@ class TunlDB:
                         ttl = ttl / 1000.0
                         if ttl >= 0:
                             timer = threading.Timer(ttl, self.remove, (key,))
+                            timer.daemon = True
                             self._timers[key] = timer
                             timer.start()
                         else:
