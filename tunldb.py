@@ -30,7 +30,7 @@ TRANSACTION_METHODS = {
 CHANNEL_TTL = 120
 CHANNEL_BUFFER = 128
 
-class TunlDB:
+class TunlDB(object):
     def __init__(self):
         self._path = None
         self._set_queue = Queue.Queue()
@@ -53,7 +53,7 @@ class TunlDB:
             except Queue.Empty:
                 continue
             # Attempt to get more db sets form queue to reduce export calls
-            for i in xrange(50):
+            for _ in xrange(50):
                 try:
                     self._set_queue.get(timeout=0.01)
                 except Queue.Empty:
@@ -70,9 +70,9 @@ class TunlDB:
         self._path = path
         self.import_data()
         if auto_export:
-            thread = threading.Thread(target=self._export_thread)
-            thread.daemon = True
-            thread.start()
+            export_thread = threading.Thread(target=self._export_thread)
+            export_thread.daemon = True
+            export_thread.start()
 
     def set(self, key, value):
         self._validate(value)
@@ -531,9 +531,9 @@ class TunlDB:
                     for tran in import_data['commit_log']:
                         self._apply_trans(tran)
 
-class TunlDBTransaction:
-    def __init__(self, cache):
-        self._cache = cache
+class TunlDBTransaction(object):
+    def __init__(self, tunldb):
+        self._tunldb = tunldb
         self._trans = []
 
     def __getattr__(self, name):
@@ -541,10 +541,10 @@ class TunlDBTransaction:
             def serialize(*args, **kwargs):
                 self._trans.append((name, args, kwargs))
             return serialize
-        return getattr(self._cache, name)
+        return getattr(self._tunldb, name)
 
     def commit(self):
         trans = (uuid.uuid4().hex, self._trans)
-        self._cache._commit_log.append(trans)
+        self._tunldb._commit_log.append(trans)
         self._trans = []
-        self._cache._apply_trans(trans)
+        self._tunldb._apply_trans(trans)
