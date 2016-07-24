@@ -99,7 +99,7 @@ class TunlDB(object):
         self._put_queue()
 
     def expire(self, key, ttl):
-        ttl_time = int(time.time() * 1000) + (ttl * 1000)
+        ttl_time = int(time.time() * 1000) + int(ttl * 1000)
 
         cur_timer = self._timers.pop(key, None)
         if cur_timer:
@@ -518,7 +518,7 @@ class TunlDB(object):
                         if not ttl:
                             continue
                         ttl -= int(time.time() * 1000)
-                        ttl = ttl / 1000.0
+                        ttl /= 1000.0
                         if ttl >= 0:
                             timer = threading.Timer(ttl, self.remove, (key,))
                             timer.daemon = True
